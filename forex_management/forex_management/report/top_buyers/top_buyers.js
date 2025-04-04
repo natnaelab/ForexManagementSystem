@@ -3,11 +3,27 @@
 
 frappe.query_reports["Top Buyers"] = {
 	filters: [
-		// {
-		// 	"fieldname": "my_filter",
-		// 	"label": __("My Filter"),
-		// 	"fieldtype": "Data",
-		// 	"reqd": 1,
-		// },
+		{
+			fieldname: "customer",
+			label: __("Customer"),
+			fieldtype: "Link",
+			options: "Customer",
+		},
+		{
+			fieldname: "currency",
+			label: __("Currency"),
+			fieldtype: "Link",
+			options: "FXCurrency",
+		},
+		{
+			fieldname: "since_from",
+			label: __("Since from"),
+			fieldtype: "Datetime",
+		},
+		{
+			fieldname: "to_date",
+			label: __("To"),
+			fieldtype: "Datetime",
+		},
 	],
 };

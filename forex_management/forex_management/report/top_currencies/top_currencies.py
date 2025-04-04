@@ -14,9 +14,10 @@ def execute(filters: dict | None = None):
     every time the report is refreshed or a filter is updated.
     """
     columns = get_columns()
-    data = get_data()
+    data = get_data(filters=filters)
+    chart = get_chart(filters=filters)
 
-    return columns, data
+    return columns, data, None, chart
 
 
 def get_columns() -> list[dict]:
@@ -47,14 +48,20 @@ def get_columns() -> list[dict]:
     ]
 
 
-def get_data() -> list[list]:
+def get_data(filters: dict | None) -> list[list]:
     """Return data for the report.
 
     The report data is a list of rows, with each row being a list of cell values.
     """
 
+    filter_opts = {}
+
+    if filters.get("currency"):
+        filter_opts["currency"] = filters.get("currency")
+
     transactions = frappe.db.get_all(
         "Transaction",
+        filters=filter_opts,
         fields=[
             "currency",
             "SUM(IF(transaction_type = 'Buy', amount, 0)) as amount_bought",
@@ -77,3 +84,27 @@ def get_data() -> list[list]:
         )
 
     return data
+
+
+def get_chart(filters: dict | None) -> dict:
+    all_data = get_data(filters=filters)
+
+    labels = [row["currency"] for row in all_data]
+    values = []
+    for row in all_data:
+        values.append(row["amount_bought"])
+        values.append(row["amount_sold"])
+
+    return {
+        "data": {
+            "labels": labels,
+            "datasets": [
+                {
+                    "name": _("Top Currency"),
+                    "values": values,
+                }
+            ],
+        },
+        "type": "bar",
+        "colors": ["#743ee2", "#121212"],
+    }

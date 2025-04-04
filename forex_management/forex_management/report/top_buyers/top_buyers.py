@@ -15,9 +15,10 @@ def execute(filters: dict | None = None):
     every time the report is refreshed or a filter is updated.
     """
     columns = get_columns()
-    data = get_data()
+    data = get_data(filters=filters)
+    chart = get_chart(filters=filters)
 
-    return columns, data
+    return columns, data, None, chart
 
 
 def get_columns() -> list[dict]:
@@ -37,16 +38,16 @@ def get_columns() -> list[dict]:
         {
             "fieldname": "amount_fx",
             "label": _("FX Amount"),
-            "fieldtype": "Value",
-            "options": "Amount",
+            "fieldtype": "Float",
+            "options": None,
             "width": 100,
             "precision": 2,
         },
         {
             "fieldname": "amount_etb",
             "label": _("Amount (ETB)"),
-            "fieldtype": "Value",
-            "options": "Amount",
+            "fieldtype": "Float",
+            "options": None,
             "width": 120,
             "precision": 2,
         },
@@ -65,14 +66,29 @@ def get_columns() -> list[dict]:
     ]
 
 
-def get_data() -> list[list]:
+def get_data(filters: dict | None) -> list[list]:
     """Return data for the report.
 
     The report data is a list of rows, with each row being a list of cell values.
     """
+
+    filter_opts = {"transaction_type": "Buy"}
+
+    if filters.get("customer"):
+        filter_opts["customer"] = filters["customer"]
+
+    if filters.get("currency"):
+        filter_opts["currency"] = filters["currency"]
+
+    if filters.get("since_from"):
+        filter_opts["date_and_time"] = [">=", filters["since_from"]]
+
+    if filters.get("to_date"):
+        filter_opts["date_and_time"] = ["<", filters["to_date"]]
+
     transactions = frappe.db.get_all(
         "Transaction",
-        filters={"transaction_type": "Buy"},
+        filters=filter_opts,
         fields=["customer_name", "currency", "exchange_rate", "SUM(amount) as total_amount"],
         order_by="total_amount desc",
         group_by="customer",
@@ -85,11 +101,31 @@ def get_data() -> list[list]:
         data.append(
             {
                 "customer": transaction.customer_name,
-                "amount_fx": f"{transaction.total_amount:,.2f}",
-                "amount_etb": f"{amount_etb:,.2f}",
+                "amount_fx": transaction.total_amount,
+                "amount_etb": amount_etb,
                 "currency": transaction.currency,
                 "exchange_rate": transaction.exchange_rate,
             }
         )
 
     return data
+
+
+def get_chart(filters: dict | None) -> dict:
+    all_data = get_data(filters=filters)
+    labels = [row["customer"] for row in all_data]
+    values = [row["amount_etb"] for row in all_data]
+
+    return {
+        "data": {
+            "labels": labels,
+            "datasets": [
+                {
+                    "name": _("Top Buyers"),
+                    "values": values,
+                }
+            ],
+        },
+        "type": "bar",
+        "colors": ["#743ee2"],
+    }

@@ -3,11 +3,11 @@
 
 frappe.query_reports["Top Currencies"] = {
 	filters: [
-		// {
-		// 	"fieldname": "my_filter",
-		// 	"label": __("My Filter"),
-		// 	"fieldtype": "Data",
-		// 	"reqd": 1,
-		// },
+		{
+			fieldname: "currency",
+			label: __("Currency"),
+			fieldtype: "Link",
+			options: "FXCurrency",
+		},
 	],
 };

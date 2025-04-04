@@ -2,6 +2,7 @@
 # For license information, please see license.txt
 
 # import frappe
+from calendar import c
 from frappe import _
 import frappe
 
@@ -14,12 +15,11 @@ def execute(filters: dict | None = None):
     every time the report is refreshed or a filter is updated.
     """
 
-    print(filters)
-
     columns = get_columns()
     data = get_data(filters=filters)
+    chart = get_chart(filters=filters)
 
-    return columns, data
+    return columns, data, None, chart
 
 
 def get_columns() -> list[dict]:
@@ -31,7 +31,7 @@ def get_columns() -> list[dict]:
         {
             "fieldname": "customer",
             "label": _("Customer"),
-            "fieldtype": "Data",
+            "fieldtype": "Link",
             "options": "Customer",
             "width": 130,
         },
@@ -48,7 +48,7 @@ def get_columns() -> list[dict]:
             "label": _("Amount (ETB)"),
             "fieldtype": "Float",
             "options": None,
-            "width": 125,
+            "width": 120,
             "precision": 2,
         },
         {
@@ -81,9 +81,10 @@ def get_data(filters: dict | None) -> list[list]:
         filter_opts["currency"] = filters["currency"]
 
     if filters.get("since_from"):
-        if filters.get("to_date"):
-            filter_opts["date_and_time"] = [">=", filters["since_from"], "<", filters["to_date"]]
         filter_opts["date_and_time"] = [">=", filters["since_from"]]
+
+    if filters.get("to_date"):
+        filter_opts["date_and_time"] = ["<", filters["to_date"]]
 
     transactions = frappe.db.get_all(
         "Transaction",
@@ -108,3 +109,23 @@ def get_data(filters: dict | None) -> list[list]:
         )
 
     return data
+
+
+def get_chart(filters: dict | None) -> dict:
+    all_data = get_data(filters=filters)
+    labels = [row["customer"] for row in all_data]
+    values = [row["amount_etb"] for row in all_data]
+
+    return {
+        "data": {
+            "labels": labels,
+            "datasets": [
+                {
+                    "name": "Top Sellers",
+                    "values": values,
+                }
+            ],
+        },
+        "type": "bar",
+        "colors": ["green"],
+    }
