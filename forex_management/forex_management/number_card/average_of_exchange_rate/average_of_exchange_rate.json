@@ -1,0 +1,23 @@
+{
+ "creation": "2025-04-04 14:28:20.757966",
+ "currency": "ETB",
+ "docstatus": 0,
+ "doctype": "Number Card",
+ "filters_json": "{}",
+ "function": "Count",
+ "idx": 0,
+ "is_public": 0,
+ "is_standard": 1,
+ "label": "Average of Exchange_rate",
+ "modified": "2025-04-04 14:28:20.777070",
+ "modified_by": "Administrator",
+ "module": "Forex Management",
+ "name": "Average of Exchange_rate",
+ "owner": "Administrator",
+ "report_field": "exchange_rate",
+ "report_function": "Average",
+ "report_name": "Top Sellers",
+ "show_percentage_stats": 1,
+ "stats_time_interval": "Daily",
+ "type": "Report"
+}

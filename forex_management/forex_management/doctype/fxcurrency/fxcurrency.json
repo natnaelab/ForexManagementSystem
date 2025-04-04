@@ -1,0 +1,74 @@
+{
+ "_liked_by": "[]",
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{currency_name} ({currency_code})",
+ "creation": "2025-04-03 11:39:33.351972",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_ra8j",
+  "currency_name",
+  "currency_code",
+  "symbol",
+  "is_active"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_ra8j",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "currency_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Currency Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "currency_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Currency Code",
+   "reqd": 1
+  },
+  {
+   "fieldname": "symbol",
+   "fieldtype": "Data",
+   "label": "Symbol"
+  },
+  {
+   "default": "0",
+   "fieldname": "is_active",
+   "fieldtype": "Check",
+   "label": "Is Active"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-04-03 11:48:16.259223",
+ "modified_by": "Administrator",
+ "module": "Forex Management",
+ "name": "FXCurrency",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}
