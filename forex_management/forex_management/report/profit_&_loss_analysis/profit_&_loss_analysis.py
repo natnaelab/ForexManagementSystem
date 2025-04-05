@@ -136,17 +136,22 @@ def get_summary_report(filters) -> dict:
     total_amount_bought = transactions[0].amount_bought if transactions else 0
     total_amount_sold = transactions[0].amount_sold if transactions else 0
 
+    if total_amount_bought:
+        total_amount_bought = f"{total_amount_bought:,.2f}"
+    if total_amount_sold:
+        total_amount_sold = f"{total_amount_sold:,.2f}"
+
     return [
         {
             "label": _("Total Amount Bought"),
-            "value": f"{total_amount_bought:,.2f}",
+            "value": total_amount_bought,
             "indicator": "green",
             "description": _("Total amount bought."),
             "color": "#10B981",
         },
         {
             "label": _("Total Amount Sold"),
-            "value": f"{total_amount_sold:,.2f}",
+            "value": total_amount_sold,
             "indicator": "red",
             "description": _("Total amount sold."),
             "color": "#EF4444",
