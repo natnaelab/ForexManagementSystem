@@ -16,8 +16,9 @@ def execute(filters: dict | None = None):
     columns = get_columns()
     data = get_data(filters=filters)
     chart = get_chart(filters=filters)
+    summary_report = get_summary_report(filters=filters)
 
-    return columns, data, None, chart
+    return columns, data, None, chart, summary_report
 
 
 def get_columns() -> list[dict]:
@@ -59,6 +60,16 @@ def get_data(filters: dict | None) -> list[list]:
     if filters.get("currency"):
         filter_opts["currency"] = filters.get("currency")
 
+    if filters.get("transaction_type"):
+        filter_opts["transaction_type"] = filters.get("transaction_type")
+
+    if filters.get("from_date") and filters.get("to_date"):
+        filter_opts["date_and_time"] = ["between", [filters["from_date"], filters["to_date"]]]
+    elif filters.get("from_date"):
+        filter_opts["date_and_time"] = [">=", filters["from_date"]]
+    elif filters.get("to_date"):
+        filter_opts["date_and_time"] = ["<", filters["to_date"]]
+
     transactions = frappe.db.get_all(
         "Transaction",
         filters=filter_opts,
@@ -88,23 +99,76 @@ def get_data(filters: dict | None) -> list[list]:
 
 def get_chart(filters: dict | None) -> dict:
     all_data = get_data(filters=filters)
-
     labels = [row["currency"] for row in all_data]
-    values = []
-    for row in all_data:
-        values.append(row["amount_bought"])
-        values.append(row["amount_sold"])
+
+    amount_bought = [float(row["amount_bought"].replace(",", "")) for row in all_data]
+    amount_sold = [float(row["amount_sold"].replace(",", "")) for row in all_data]
 
     return {
         "data": {
             "labels": labels,
             "datasets": [
-                {
-                    "name": _("Top Currency"),
-                    "values": values,
-                }
+                {"name": _("Bought"), "values": amount_bought},
+                {"name": _("Sold"), "values": amount_sold},
             ],
         },
         "type": "bar",
-        "colors": ["#743ee2", "#121212"],
+        "colors": ["#10B981", "#EF4444"],
     }
+
+
+def get_summary_report(filters: dict | None) -> dict:
+    def _get_most_traded_currency(transaction_type):
+        filter_opts = {}
+
+        if filters.get("currency"):
+            filter_opts["currency"] = filters.get("currency")
+        if filters.get("transaction_type"):
+            filter_opts["transaction_type"] = filters.get("transaction_type")
+        if filters.get("from_date"):
+            filter_opts["date_and_time"] = [">=", filters.get("from_date")]
+        if filters.get("to_date"):
+            filter_opts["date_and_time"] = ["<", filters.get("to_date")]
+
+        filter_opts["transaction_type"] = transaction_type
+
+        most_traded_currency = frappe.db.get_all(
+            "Transaction",
+            filters=filter_opts,
+            fields=["currency", "SUM(amount) as amount"],
+            order_by="amount desc",
+            group_by="currency",
+            limit=1,
+        )
+        return most_traded_currency[0] if most_traded_currency else None
+
+    most_bought = _get_most_traded_currency("Buy")
+    most_sold = _get_most_traded_currency("Sell")
+
+    most_bought_value = (
+        f"{most_bought.get('amount', 0):,.2f} ({most_bought.get('currency', '').split('(')[1].strip(')')})"
+        if most_bought
+        else "0.00"
+    )
+    most_sold_value = (
+        f"{most_sold.get('amount', 0):,.2f} ({most_sold.get('currency', '').split('(')[1].strip(')')})"
+        if most_sold
+        else "0.00"
+    )
+
+    return [
+        {
+            "label": _("Most Bought"),
+            "value": most_bought_value,
+            "indicator": "green",
+            "description": _("Most Bought Currency"),
+            "color": "#10B981",
+        },
+        {
+            "label": _("Most Sold"),
+            "value": most_sold_value,
+            "indicator": "red",
+            "description": _("Most Sold Currency"),
+            "color": "#EF4444",
+        },
+    ]

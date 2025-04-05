@@ -80,10 +80,11 @@ def get_data(filters: dict | None) -> list[list]:
     if filters.get("currency"):
         filter_opts["currency"] = filters["currency"]
 
-    if filters.get("since_from"):
-        filter_opts["date_and_time"] = [">=", filters["since_from"]]
-
-    if filters.get("to_date"):
+    if filters.get("from_date") and filters.get("to_date"):
+        filter_opts["date_and_time"] = ["between", [filters["from_date"], filters["to_date"]]]
+    elif filters.get("from_date"):
+        filter_opts["date_and_time"] = [">=", filters["from_date"]]
+    elif filters.get("to_date"):
         filter_opts["date_and_time"] = ["<", filters["to_date"]]
 
     transactions = frappe.db.get_all(

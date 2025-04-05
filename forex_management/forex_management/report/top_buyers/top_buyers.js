@@ -16,13 +16,13 @@ frappe.query_reports["Top Buyers"] = {
 			options: "FXCurrency",
 		},
 		{
-			fieldname: "since_from",
-			label: __("Since from"),
+			fieldname: "from_date",
+			label: __("From Date"),
 			fieldtype: "Datetime",
 		},
 		{
 			fieldname: "to_date",
-			label: __("To"),
+			label: __("To Date"),
 			fieldtype: "Datetime",
 		},
 	],
