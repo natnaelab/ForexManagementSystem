@@ -11,8 +11,31 @@ const genRandomExchangeRate = () => {
 frappe.ui.form.on("Transaction", {
     refresh(frm) { },
 
+
+    setup(frm) {
+        frm.set_query("currency", function () {
+            return {
+                query: 'forex_management.forex_management.doctype.transaction.transaction.get_active_currencies',
+                filters: {
+                    "is_active": 1
+                }
+            }
+        }
+        )
+    },
+
     before_load(frm) {
         rate = genRandomExchangeRate();
         frm.set_value("exchange_rate", rate);
+    },
+
+
+
+    onload(frm) {
+        frm.set_query("currency", function () {
+            return {
+                query: 'forex_management.forex_management.doctype.transaction.transaction.get_active_currencies',
+            }
+        })
     }
 });
