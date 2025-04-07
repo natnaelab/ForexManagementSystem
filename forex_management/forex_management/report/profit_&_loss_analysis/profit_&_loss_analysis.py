@@ -62,6 +62,9 @@ def get_data(filters: dict | None) -> list[list]:
     elif filters.get("to_date"):
         filter_opts["date_and_time"] = ["<", filters["to_date"]]
 
+    if filters.get("currency"):
+        filter_opts["currency"] = frappe.db.get_value("FXCurrency", {"currency_code": filters.get("currency")})
+
     transactions = frappe.db.get_all(
         "Transaction",
         filters=filter_opts,
@@ -117,6 +120,9 @@ def get_summary_report(filters) -> dict:
 
     if filters.get("customer"):
         filter_opts["customer"] = filters["customer"]
+
+    if filters.get("currency"):
+        filter_opts["currency"] = frappe.db.get_value("FXCurrency", {"currency_code": filters.get("currency")})
 
     if filters.get("from_date") and filters.get("to_date"):
         filter_opts["date_and_time"] = ["between", [filters["from_date"], filters["to_date"]]]
