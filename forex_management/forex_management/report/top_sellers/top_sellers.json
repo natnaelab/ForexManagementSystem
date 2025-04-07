@@ -7,10 +7,10 @@
  "docstatus": 0,
  "doctype": "Report",
  "filters": [],
- "idx": 0,
+ "idx": 4,
  "is_standard": "Yes",
  "letterhead": null,
- "modified": "2025-04-04 10:19:38.578069",
+ "modified": "2025-04-07 11:38:47.039217",
  "modified_by": "Administrator",
  "module": "Forex Management",
  "name": "Top Sellers",
@@ -22,15 +22,6 @@
  "roles": [
   {
    "role": "System Manager"
-  },
-  {
-   "role": "Transaction Manager"
-  },
-  {
-   "role": "Forex System Admin"
-  },
-  {
-   "role": "Agent"
   }
  ],
  "timeout": 0

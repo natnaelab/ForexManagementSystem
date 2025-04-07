@@ -2,7 +2,7 @@
 # For license information, please see license.txt
 
 # import frappe
-from turtle import width
+from forex_management.forex_management.report import top_sellers
 from frappe import _
 import frappe
 
@@ -16,9 +16,8 @@ def execute(filters: dict | None = None):
     """
     columns = get_columns()
     data = get_data(filters=filters)
-    chart = get_chart(filters=filters)
 
-    return columns, data, None, chart
+    return columns, data, None
 
 
 def get_columns() -> list[dict]:
@@ -26,7 +25,6 @@ def get_columns() -> list[dict]:
 
     One field definition per column, just like a DocType field definition.
     """
-
     return [
         {
             "fieldname": "customer",
@@ -56,12 +54,20 @@ def get_columns() -> list[dict]:
             "label": _("Currency"),
             "fieldtype": "Data",
             "options": "Currency",
+            "width": 200,
         },
         {
             "fieldname": "exchange_rate",
             "label": _("Rate"),
             "fieldtype": "Float",
             "options": "Exchange Rate",
+        },
+        {
+            "fieldname": "transaction_type",
+            "label": _("Type"),
+            "fieldtype": "Select",
+            "options": "Buy, Sell",
+            "width": 80,
         },
     ]
 
@@ -72,11 +78,12 @@ def get_data(filters: dict | None) -> list[list]:
     The report data is a list of rows, with each row being a list of cell values.
     """
 
-    filter_opts = {"transaction_type": "Buy"}
+    filter_opts = {}
 
     if filters.get("customer"):
         filter_opts["customer"] = filters["customer"]
-
+    if filters.get("transaction_type"):
+        filter_opts["transaction_type"] = filters["transaction_type"]
     if filters.get("currency"):
         filter_opts["currency"] = filters["currency"]
 
@@ -85,14 +92,20 @@ def get_data(filters: dict | None) -> list[list]:
     elif filters.get("from_date"):
         filter_opts["date_and_time"] = [">=", filters["from_date"]]
     elif filters.get("to_date"):
-        filter_opts["date_and_time"] = ["<", filters["to_date"]]
+        filter_opts["date_and_time"] = ["<=", filters["to_date"]]
 
     transactions = frappe.db.get_all(
         "Transaction",
         filters=filter_opts,
-        fields=["customer_name", "currency", "exchange_rate", "SUM(amount) as total_amount"],
+        fields=[
+            "customer",
+            "currency",
+            "exchange_rate",
+            "SUM(amount) as total_amount",
+            "transaction_type",
+        ],
         order_by="total_amount desc",
-        group_by="customer",
+        group_by="customer,currency,transaction_type",
     )
 
     data = []
@@ -101,27 +114,13 @@ def get_data(filters: dict | None) -> list[list]:
 
         data.append(
             {
-                "customer": transaction.customer_name,
+                "customer": transaction.customer,
                 "amount_fx": transaction.total_amount,
                 "amount_etb": amount_etb,
                 "currency": transaction.currency,
                 "exchange_rate": transaction.exchange_rate,
+                "transaction_type": transaction.transaction_type,
             }
         )
 
     return data
-
-
-def get_chart(filters: dict | None) -> dict:
-    all_data = get_data(filters=filters)
-    labels = [row["customer"] for row in all_data]
-    values = [row["amount_etb"] for row in all_data]
-
-    return {
-        "data": {
-            "labels": labels,
-            "datasets": [{"name": _("Top Buyers"), "values": values}],
-        },
-        "type": "bar",
-        "colors": ["#743ee2"],
-    }

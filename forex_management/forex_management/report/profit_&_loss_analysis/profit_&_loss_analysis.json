@@ -10,7 +10,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letterhead": null,
- "modified": "2025-04-04 10:46:58.479057",
+ "modified": "2025-04-07 11:37:21.795889",
  "modified_by": "Administrator",
  "module": "Forex Management",
  "name": "Profit & Loss Analysis",
@@ -22,15 +22,6 @@
  "roles": [
   {
    "role": "System Manager"
-  },
-  {
-   "role": "Transaction Manager"
-  },
-  {
-   "role": "Forex System Admin"
-  },
-  {
-   "role": "Agent"
   }
  ],
  "timeout": 0

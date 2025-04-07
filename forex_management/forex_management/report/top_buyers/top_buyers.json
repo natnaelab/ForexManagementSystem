@@ -10,7 +10,7 @@
  "idx": 0,
  "is_standard": "Yes",
  "letterhead": null,
- "modified": "2025-04-04 09:18:43.706600",
+ "modified": "2025-04-07 11:39:13.665074",
  "modified_by": "Administrator",
  "module": "Forex Management",
  "name": "Top Buyers",
@@ -22,15 +22,6 @@
  "roles": [
   {
    "role": "System Manager"
-  },
-  {
-   "role": "Transaction Manager"
-  },
-  {
-   "role": "Forex System Admin"
-  },
-  {
-   "role": "Agent"
   }
  ],
  "timeout": 0
