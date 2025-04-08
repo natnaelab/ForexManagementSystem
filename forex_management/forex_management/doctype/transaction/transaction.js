@@ -29,8 +29,6 @@ frappe.ui.form.on("Transaction", {
         frm.set_value("exchange_rate", rate);
     },
 
-
-
     onload(frm) {
         frm.set_query("currency", function () {
             return {

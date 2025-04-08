@@ -1,0 +1,55 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2025-04-08 15:04:16.420856",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "section_break_my2g",
+  "buy_transaction",
+  "matched_amount",
+  "buy_exchange_rate",
+  "pnl"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_my2g",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "buy_transaction",
+   "fieldtype": "Link",
+   "label": "Buy Transaction",
+   "options": "Transaction"
+  },
+  {
+   "fieldname": "matched_amount",
+   "fieldtype": "Float",
+   "label": "Matched Amount"
+  },
+  {
+   "fieldname": "buy_exchange_rate",
+   "fieldtype": "Float",
+   "label": "Buy Exchange Rate"
+  },
+  {
+   "fieldname": "pnl",
+   "fieldtype": "Float",
+   "label": "PnL"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2025-04-08 15:30:37.369820",
+ "modified_by": "Administrator",
+ "module": "Forex Management",
+ "name": "Transaction Link",
+ "owner": "Administrator",
+ "permissions": [],
+ "row_format": "Dynamic",
+ "sort_field": "creation",
+ "sort_order": "DESC",
+ "states": []
+}

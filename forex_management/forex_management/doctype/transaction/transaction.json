@@ -7,13 +7,14 @@
  "field_order": [
   "section_break_yw3h",
   "customer",
-  "customer_name",
   "currency",
   "amount",
   "exchange_rate",
-  "amended_from",
+  "date_and_time",
   "transaction_type",
-  "date_and_time"
+  "amount_sold",
+  "linked_buys",
+  "amended_from"
  ],
  "fields": [
   {
@@ -26,14 +27,6 @@
    "in_list_view": 1,
    "label": "Customer",
    "options": "Customer",
-   "reqd": 1
-  },
-  {
-   "fetch_from": "customer.full_name",
-   "fieldname": "customer_name",
-   "fieldtype": "Data",
-   "in_list_view": 1,
-   "label": "Customer Name",
    "reqd": 1
   },
   {
@@ -69,16 +62,31 @@
    "search_index": 1
   },
   {
-   "fieldname": "transaction_type",
-   "fieldtype": "Select",
-   "label": "Transaction Type",
-   "options": "Buy\nSell"
-  },
-  {
    "default": "now",
    "fieldname": "date_and_time",
    "fieldtype": "Datetime",
    "label": "Time",
+   "read_only": 1
+  },
+  {
+   "fieldname": "transaction_type",
+   "fieldtype": "Select",
+   "label": "Transaction Type",
+   "options": "Buy\nSell",
+   "reqd": 1
+  },
+  {
+   "fieldname": "amount_sold",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Sold Amount",
+   "read_only": 1
+  },
+  {
+   "fieldname": "linked_buys",
+   "fieldtype": "Table",
+   "label": "Linked Buys",
+   "options": "Transaction Link",
    "read_only": 1
   }
  ],
@@ -86,7 +94,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-04 08:58:57.730642",
+ "modified": "2025-04-08 16:26:28.399332",
  "modified_by": "Administrator",
  "module": "Forex Management",
  "name": "Transaction",
