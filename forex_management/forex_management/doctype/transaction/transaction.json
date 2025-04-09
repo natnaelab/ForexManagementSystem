@@ -14,7 +14,9 @@
   "transaction_type",
   "amount_sold",
   "linked_buys",
-  "amended_from"
+  "transaction_fee",
+  "amended_from",
+  "amount_etb"
  ],
  "fields": [
   {
@@ -88,13 +90,26 @@
    "label": "Linked Buys",
    "options": "Transaction Link",
    "read_only": 1
+  },
+  {
+   "fieldname": "transaction_fee",
+   "fieldtype": "Float",
+   "hidden": 1,
+   "label": "Transaction Fee",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amount_etb",
+   "fieldtype": "Float",
+   "label": "Amount ETB",
+   "read_only": 1
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-04-08 16:26:28.399332",
+ "modified": "2025-04-09 10:57:24.833597",
  "modified_by": "Administrator",
  "module": "Forex Management",
  "name": "Transaction",

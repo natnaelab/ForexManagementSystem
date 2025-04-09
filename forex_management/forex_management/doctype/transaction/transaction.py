@@ -14,6 +14,9 @@ class Transaction(Document):
         target_currency_code = selected_currency if self.transaction_type == "Buy" else "ETB"
         self.name = f"TX{series_number} - {target_currency_code}/{base_currency_code} - Amount: {self.amount}"
 
+    def before_insert(self):
+        self.amount_etb = float(self.amount) * float(self.exchange_rate)
+
     def on_submit(self):
         if self.transaction_type != "Sell":
             return
